@@ -5,20 +5,20 @@ simple zlibrary api to be used with calibre-zlibrary-plugin
 og ref: https://github.com/bipinkrish/Zlibrary-API/
 """
 
-from mechanize import Browser
 from urllib.parse import urlencode
 import json
 
 
-class Zlibrary:
+class ZLibrary:
     def __init__(
         self,
+        browser,
         email: str = None,
         password: str = None,
         remix_userid: [int, str] = None,
         remix_userkey: str = None,
     ):
-        self.browser = Browser()
+        self.browser = browser
         self.email: str
         self.name: str
         self.remix_userid: [int, str]
@@ -26,6 +26,8 @@ class Zlibrary:
         self.domain = "https://singlelogin.re"
 
         self.loggedin = False
+        self.browser.set_header('User-Agent', "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36")
+        self.browser.set_handle_robots(False)
 
         if email is not None and password is not None:
             self.loginWithEmail(email, password)
