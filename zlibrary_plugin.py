@@ -10,7 +10,7 @@ from calibre.gui2.store.web_store_dialog import WebStoreDialog
 from calibre_plugins.store_zlibrary.zlibrary_api import ZLibrary
 
 
-base_url = "https://singlelogin.re"
+base_url = "https://1lib.sk"
 
 br = browser()
 zlibrary = ZLibrary(
@@ -31,7 +31,7 @@ def search_zlib(query, extensions=["epub"], max_results=10, timeout=60):
         s.title       = book["title"]
         s.author      = book["author"]
         s.price       = '$0.00'
-        s.detail_item = book["dl"]
+        s.detail_item = book["dl"] + "+++++" +  book["href"]
         s.drm         = SearchResult.DRM_UNLOCKED
         s.formats = book["extension"].upper()
 
@@ -43,12 +43,13 @@ class ZLibraryStorePlugin(BasicStoreConfig, StorePlugin):
         return br
 
     def open(self, parent=None, detail_item=None, external=False):
-        url = base_url
+        href = detail_item.split("+++++")[1] if detail_item else ""
+        url = base_url + href
 
         if external or self.config.get("open_external", False):
-            open_url(detail_item if detail_item else url)
+            open_url(url)
         else:
-            d = WebStoreDialog(self.gui, url, parent, detail_item, create_browser=self.create_browser)
+            d = WebStoreDialog(self.gui, base_url, parent, url, create_browser=self.create_browser)
             d.setWindowTitle(self.name)
             d.set_tags(self.config.get("tags", ""))
             d.exec_()
@@ -56,7 +57,7 @@ class ZLibraryStorePlugin(BasicStoreConfig, StorePlugin):
     @staticmethod
     def get_details(search_result, retries=3):
         s = search_result
-        s.downloads[s.formats] = base_url + s.detail_item
+        s.downloads[s.formats] = base_url + s.detail_item.split("+++++")[0]
 
     @staticmethod
     def search(query, max_results=10, timeout=60):

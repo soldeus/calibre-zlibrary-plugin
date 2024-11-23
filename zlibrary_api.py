@@ -23,7 +23,7 @@ class ZLibrary:
         self.name: str
         self.remix_userid: [int, str]
         self.remix_userkey: str
-        self.domain = "https://singlelogin.re"
+        self.domain = "https://1lib.sk"
 
         self.loggedin = False
         self.browser.set_header('User-Agent', "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36")
